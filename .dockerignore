@@ -1,6 +1,5 @@
 node_modules
 target
-.git
 .gitea
 Dockerfile
 README.md
