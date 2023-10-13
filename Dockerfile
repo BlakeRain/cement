@@ -32,5 +32,5 @@ RUN rm -rf /var/lib/apt/lists/*
 
 EXPOSE 8000
 
-COPY --from=builder /usr/src/cement/target/release/cement .
+COPY --from=builder /usr/src/cement/target/x86_64-unknown-linux-musl/release/cement .
 CMD ["./cement"]
