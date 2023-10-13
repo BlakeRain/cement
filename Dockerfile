@@ -4,7 +4,7 @@ RUN apt update -y
 RUN apt install -y musl-tools musl-dev
 
 WORKDIR /usr/src
-RUN USER=root mkdir cement
+RUN USER=root cargo new cement
 WORKDIR /usr/src/cement
 COPY Cargo.toml ./
 RUN cargo build --target x86_64-unknown-linux-musl --release
