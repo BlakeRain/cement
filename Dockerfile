@@ -10,7 +10,7 @@ COPY Cargo.toml ./
 RUN cargo build --target x86_64-unknown-linux-musl --release
 
 COPY package.json tailwind.config.js ./
-RUN npm install
+RUN yarn install
 
 COPY build.rs migrations src style templates ./
 RUN cargo install --target x86_64-unknown-linux-musl --path .
