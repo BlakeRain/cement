@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}View Paste{% endblock title %}
+{% block body %}
+  {% if post %}
+    <div class="grow font-mono">{{ post.content|safe }}</div>
+  {% else %}
+    <div class="grow flex flex-col justify-center items-center gap-2">
+      <h1 class="text-4xl font-bold">&#x1FAE0; Not Found</h1>
+      <p class="opacity-75">Sorry, but the paste you were trying to view does not exist.</p>
+      <a class="text-blue-500 hover:underline" href="/">Create a new paste</a>
+    </div>
+  {% endif %}
+{% endblock body %}
+

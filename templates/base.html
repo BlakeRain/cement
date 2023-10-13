@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% block head %}
+    <title>{% block title %}{% endblock title %} - Cement</title>
+    {% endblock head %}
+    <style>
+      {% include "main.css" %}
+    </style>
+  </head>
+  <body class="bg-neutral-200 text-neutral-800 dark:bg-slate-800 dark:text-neutral-300 flex flex-col gap-4 h-screen p-4">
+    {% block body %}{% endblock body %}
+    <footer class="select-none text-sm text-neutral-500 dark:text-neutral-400 flex flex-col items-center">
+      <div>
+        Powered by
+        <a
+          class="text-neutral-600 dark:text-neutral-400 hover:text-neutral-500 dark:hover:text-neutral-500"
+          href="https://git.blakerain.com/BlakeRain/cement"
+          >Cement {{ version }}</a
+        >
+      </div>
+      <pre class="font-mono text-xs">{{ build_info }}</pre>
+    </footer>
+  </body>
+</html>

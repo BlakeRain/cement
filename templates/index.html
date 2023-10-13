@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Create Paste{% endblock title %}
+{% block body %}
+<form class="grow" method="POST" action="/">
+  <textarea
+      class="w-full h-full resize-none bg-transparent font-mono outline-none"
+      name="content"
+      autofocus
+      autocomplete="off"
+      autocorrect="off"
+      autocapitalize="off"
+      spellcheck="false"
+      placeholder="Paste something :)"></textarea>
+  <button
+      class="absolute bottom-4 right-4 w-12 h-12 rounded bg-slate-500 text-white text-3xl cursor-pointer hidden"
+      type="submit"
+      title="&#x2318;+&#x23ce;">&#x270e;</button>
+</form>
+<script>
+  const form = document.querySelector("form");
+  const textarea = document.querySelector("textarea");
+  const button = document.querySelector("button[type='submit']");
+
+  textarea.addEventListener("input", () => {
+    button.classList.toggle("hidden", !textarea.value);
+  });
+
+  document.body.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && (event.metaKey || event.ctrlKey || event.altKey)) {
+      form.submit();
+    }
+  });
+</script>
+{% endblock body %}

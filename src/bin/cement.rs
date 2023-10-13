@@ -1,0 +1,43 @@
+use cement::{create_app, Env};
+use clap::Parser;
+use poem::{listener::TcpListener, Server};
+use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let args = cement::Args::parse();
+
+    if args.version {
+        println!(
+            "{} {} {}",
+            env!("CARGO_PKG_NAME"),
+            env!("CARGO_PKG_VERSION"),
+            // emitted in build.rs
+            env!("CARGO_BUILD_INFO")
+        );
+
+        return Ok(());
+    }
+
+    {
+        let fmt = tracing_subscriber::fmt::layer()
+            .with_target(false)
+            .without_time();
+        let sub = tracing_subscriber::registry()
+            .with(tracing_subscriber::EnvFilter::new(match args.verbose {
+                0 => std::env::var("RUST_LOG").unwrap_or_else(|_| "info".into()),
+                1 => "debug".into(),
+                _ => "trace".into(),
+            }))
+            .with(fmt);
+        sub.init();
+    }
+
+    let env = Env::new(&args.db).await?;
+    let app = create_app(env);
+    Server::new(TcpListener::bind("127.0.0.1:3000"))
+        .run(app)
+        .await?;
+
+    Ok(())
+}
