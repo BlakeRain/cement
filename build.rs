@@ -2,28 +2,27 @@ use std::process::Command;
 
 fn main() {
     let git_commit = build_data::get_git_commit_short().unwrap_or_else(|_| "unknown".to_string());
-    let git_dirty = build_data::get_git_dirty().unwrap_or_default();
     let build_date = build_data::format_date(build_data::now());
 
-    let build_info = if !git_commit.is_empty() {
-        let git_info = if git_dirty {
-            format!("{git_commit}-dirty")
-        } else {
-            git_commit
-        };
-
-        format!("({git_info} {build_date})")
-    } else {
-        build_date.to_string()
-    };
-
-    // Run `yarn build` to build the Tailwind CSS
-    Command::new("npm")
+    // Run `npm run build` to build the Tailwind CSS
+    let status = Command::new("npm")
         .args(["run", "build"])
         .status()
         .expect("failed to build Tailwind CSS");
+    if !status.success() {
+        panic!("failed to build Tailwind CSS");
+    }
 
     println!("cargo:rerun-if-changed=templates");
-    println!("cargo:rustc-env=CARGO_BUILD_INFO={build_info}");
+    println!("cargo:rustc-env=CARGO_BUILD_DATE={}", build_date);
+    println!(
+        "cargo:rustc-env=CARGO_GIT_COMMIT={}",
+        if git_commit.is_empty() {
+            "unknown"
+        } else {
+            &git_commit
+        }
+    );
+
     build_data::no_debug_rebuilds();
 }
