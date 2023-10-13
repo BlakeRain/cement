@@ -19,7 +19,7 @@ COPY package.json tailwind.config.js ./
 RUN npm install
 
 RUN rm src/main.rs
-COPY build.rs migrations src style templates ./
+ADD build.rs migrations src style templates
 RUN cargo install --target x86_64-unknown-linux-musl --path .
 
 FROM scratch
