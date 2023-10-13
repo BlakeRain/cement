@@ -15,18 +15,6 @@ mod templates;
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Args::parse();
 
-    if args.version {
-        println!(
-            "{} {} {}",
-            env!("CARGO_PKG_NAME"),
-            env!("CARGO_PKG_VERSION"),
-            // emitted in build.rs
-            env!("CARGO_BUILD_INFO")
-        );
-
-        return Ok(());
-    }
-
     {
         let fmt = tracing_subscriber::fmt::layer()
             .with_target(false)
