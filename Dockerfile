@@ -1,7 +1,9 @@
 FROM rust:latest AS builder
 RUN rustup target add x86_64-unknown-linux-musl
 RUN apt update -y
-RUN apt install -y musl-tools musl-dev
+RUN apt install -y musl-tools musl-dev ca-certificates curl gnupg
+RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - 
+RUN apt-get install -y nodejs
 
 WORKDIR /usr/src
 RUN USER=root cargo new cement
