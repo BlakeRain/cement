@@ -2,7 +2,10 @@
 {% block title %}View Paste{% endblock title %}
 {% block body %}
   {% if post %}
-    <div class="grow font-mono">{{ post.content|safe }}</div>
+    <pre class="grow font-mono">{{ post.content }}</pre>
+    <div class="flex flex-row justify-center">
+      <a class="text-blue-500 hover:underline" href="/">Create a new paste</a>
+    </div>
   {% else %}
     <div class="grow flex flex-col justify-center items-center gap-2">
       <h1 class="text-4xl font-bold">&#x1FAE0; Not Found</h1>
