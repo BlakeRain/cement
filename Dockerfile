@@ -9,28 +9,15 @@ RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesourc
 RUN apt-get update -y
 RUN apt-get install -y nodejs
 
-WORKDIR /usr/src
-RUN USER=root cargo new cement
+RUN mkdir -p /usr/src/cement
 WORKDIR /usr/src/cement
-COPY Cargo.toml ./
-RUN cargo build --target x86_64-unknown-linux-musl --release
-
-COPY package.json tailwind.config.js ./
+ADD . .
 RUN npm install
-
-RUN rm src/main.rs
-COPY build.rs ./
-COPY migrations ./migrations
-COPY src ./src
-COPY templates ./templates
 RUN cargo build --target x86_64-unknown-linux-musl --release
 
-FROM debian:buster-slim
-RUN apt-get update -y
-RUN apt-get install -y ca-certificates tzdata
-RUN rm -rf /var/lib/apt/lists/*
-
-EXPOSE 8000
-
+FROM scratch
+EXPOSE 3000
 COPY --from=builder /usr/src/cement/target/x86_64-unknown-linux-musl/release/cement .
-CMD ["./cement"]
+COPY --from=builder /usr/src/cement/templates ./templates
+ENTRYPOINT ["./cement"]
+
