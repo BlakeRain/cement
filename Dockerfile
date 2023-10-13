@@ -2,7 +2,11 @@ FROM rust:latest AS builder
 RUN rustup target add x86_64-unknown-linux-musl
 RUN apt update -y
 RUN apt install -y musl-tools musl-dev ca-certificates curl gnupg
-RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - 
+
+RUN mkdir -p /etc/apt/keyrings
+RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+RUN apt-get update -y
 RUN apt-get install -y nodejs
 
 WORKDIR /usr/src
