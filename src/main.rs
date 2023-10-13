@@ -43,7 +43,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let env = Env::new(&args.db).await?;
     let app = create_app(env);
-    Server::new(TcpListener::bind("0.0.0.0:3000"))
+    Server::new(TcpListener::bind("0.0.0.0:8000"))
         .run(app)
         .await?;
 
