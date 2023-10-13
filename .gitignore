@@ -1,6 +1,7 @@
 /Cargo.lock
 /cement.db
 /node_modules
+/package-lock.json
 /target
 /templates/main.css
 /yarn.lock

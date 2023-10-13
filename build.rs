@@ -18,8 +18,8 @@ fn main() {
     };
 
     // Run `yarn build` to build the Tailwind CSS
-    Command::new("yarn")
-        .args(["build"])
+    Command::new("npm")
+        .args(["run", "build"])
         .status()
         .expect("failed to build Tailwind CSS");
 
