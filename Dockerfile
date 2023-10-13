@@ -9,8 +9,10 @@ WORKDIR /usr/src/cement
 COPY Cargo.toml ./
 RUN cargo build --target x86_64-unknown-linux-musl --release
 
-COPY build.rs package.json tailwind.config.js ./
-COPY migrations src style templates ./
+COPY package.json tailwind.config.js ./
+RUN yarn install
+
+COPY build.rs migrations src style templates ./
 RUN cargo install --target x86_64-unknown-linux-musl --path .
 
 FROM scratch
