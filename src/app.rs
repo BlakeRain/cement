@@ -2,7 +2,8 @@ use poem::{
     error::InternalServerError,
     get, handler,
     http::{header::LOCATION, HeaderMap, HeaderValue, StatusCode},
-    web::{Data, Form, Html, Path, RemoteAddr},
+    middleware::Csrf,
+    web::{CsrfToken, CsrfVerifier, Data, Form, Html, Path, RemoteAddr},
     EndpointExt, IntoEndpoint, Route,
 };
 use serde::Deserialize;
@@ -31,22 +32,35 @@ fn render_template(name: &str, context: &Context) -> poem::Result<Html<String>> 
 }
 
 #[handler]
-fn handle_index_get() -> poem::Result<Html<String>> {
-    let context = default_context();
+fn handle_index_get(token: &CsrfToken) -> poem::Result<Html<String>> {
+    let mut context = default_context();
+    context.insert("token", &token.0);
     render_template("index.html", &context)
 }
 
 #[derive(Deserialize)]
 struct CreatePaste {
+    token: String,
     content: String,
 }
 
 #[handler]
 async fn handle_index_post(
     env: Data<&Env>,
+    verifier: &CsrfVerifier,
     remote: &RemoteAddr,
-    Form(CreatePaste { content }): Form<CreatePaste>,
+    Form(CreatePaste { token, content }): Form<CreatePaste>,
 ) -> poem::Result<(StatusCode, HeaderMap, ())> {
+    if !verifier.is_valid(&token) {
+        tracing::error!("CSRF token was invalid");
+
+        return Ok((
+            StatusCode::BAD_REQUEST,
+            HeaderMap::from_iter([(LOCATION, HeaderValue::from_str("/").expect("header value"))]),
+            (),
+        ));
+    }
+
     let slug = Post::create(&env.pool, remote, content)
         .await
         .map_err(InternalServerError)?;
@@ -77,4 +91,5 @@ pub fn create_app(env: Env) -> impl IntoEndpoint {
         .at("/", get(handle_index_get).post(handle_index_post))
         .at("/:code", get(handle_paste_get))
         .data(env)
+        .with(Csrf::new())
 }
