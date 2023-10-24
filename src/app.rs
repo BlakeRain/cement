@@ -3,7 +3,7 @@ use poem::{
     get, handler,
     http::{header::LOCATION, HeaderMap, HeaderValue, StatusCode},
     middleware::Csrf,
-    web::{CsrfToken, CsrfVerifier, Data, Form, Html, Path, RemoteAddr},
+    web::{CsrfToken, CsrfVerifier, Data, Form, Html, Path, RealIp},
     EndpointExt, IntoEndpoint, Route,
 };
 use serde::Deserialize;
@@ -48,7 +48,7 @@ struct CreatePaste {
 async fn handle_index_post(
     env: Data<&Env>,
     verifier: &CsrfVerifier,
-    remote: &RemoteAddr,
+    remote: RealIp,
     Form(CreatePaste { token, content }): Form<CreatePaste>,
 ) -> poem::Result<(StatusCode, HeaderMap, ())> {
     if !verifier.is_valid(&token) {
@@ -61,7 +61,7 @@ async fn handle_index_post(
         ));
     }
 
-    let slug = Post::create(&env.pool, remote, content)
+    let slug = Post::create(&env.pool, &remote, content)
         .await
         .map_err(InternalServerError)?;
 

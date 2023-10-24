@@ -1,7 +1,7 @@
 use std::cell::RefCell;
 
 use gpw::PasswordGenerator;
-use poem::web::RemoteAddr;
+use poem::web::RealIp;
 use rand::{distributions::Alphanumeric, thread_rng, Rng};
 use serde::Serialize;
 use sqlx::SqlitePool;
@@ -22,7 +22,7 @@ pub struct Post {
 impl Post {
     pub async fn create(
         pool: &SqlitePool,
-        remote: &RemoteAddr,
+        remote: &RealIp,
         content: String,
     ) -> sqlx::Result<String> {
         let slug = generate_slug();
@@ -33,7 +33,13 @@ impl Post {
         .bind(&slug)
         .bind(content)
         .bind(OffsetDateTime::now_utc())
-        .bind(remote.to_string())
+        .bind(
+            remote
+                .0
+                .as_ref()
+                .map(ToString::to_string)
+                .unwrap_or_else(|| "unknown".to_owned()),
+        )
         .execute(pool)
         .await?;
         Ok(slug)
