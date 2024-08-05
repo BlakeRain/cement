@@ -12,12 +12,20 @@
       autocapitalize="off"
       spellcheck="false"
       placeholder="Paste something :)"></textarea>
-  <button
-      class="absolute bottom-4 right-4 px-4 py-2 rounded-lg shadow-lg bg-blue-800 dark:bg-blue-800
-      hover:bg-blue-700 dark:hover:bg-blue-700 text-gray-200 hover:text-gray-100 text-lg
-      cursor-pointer transition-colors hidden"
-      type="submit"
-      title="Create paste &#x2318;+&#x23ce;">&#10003; Create paste</button>
+  <div class="absolute bottom-4 right-4 flex flex-row items-stretch gap-2">
+    <select
+      class="px-4 py-2 bg-slate-200 dark:bg-slate-800 text-gray-800 dark:text-gray-200 text-md rounded-md"
+      name="highlight">
+      <option value="">No syntax highlighting</option>
+      {% include "highlight/languages.html" %}
+    </select>
+    <button
+        class="px-4 py-2 rounded-md bg-blue-800 dark:bg-blue-800 hover:bg-blue-700
+        dark:hover:bg-blue-700 text-gray-200 hover:text-gray-100 text-md cursor-pointer
+        transition-colors"
+        type="submit"
+        title="Create paste &#x2318;+&#x23ce;">&#10003; Create paste</button>
+  </div>
 </form>
 <script>
   const form = document.querySelector("form");
@@ -25,7 +33,7 @@
   const button = document.querySelector("button[type='submit']");
 
   textarea.addEventListener("input", () => {
-    button.classList.toggle("hidden", !textarea.value);
+    button.disabled = !textarea.value;
   });
 
   document.body.addEventListener("keydown", (event) => {

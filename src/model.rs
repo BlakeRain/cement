@@ -17,6 +17,7 @@ pub struct Post {
     #[serde(with = "time::serde::rfc2822")]
     pub added: OffsetDateTime,
     pub remote: String,
+    pub highlight: Option<String>,
 }
 
 impl Post {
@@ -24,11 +25,12 @@ impl Post {
         pool: &SqlitePool,
         remote: &RealIp,
         content: String,
+        highlight: Option<String>,
     ) -> sqlx::Result<String> {
         let slug = generate_slug();
         sqlx::query(
-            "INSERT INTO posts (slug, content, added, remote)
-            VALUES ($1, $2, $3, $4)",
+            "INSERT INTO posts (slug, content, added, remote, highlight)
+            VALUES ($1, $2, $3, $4, $5)",
         )
         .bind(&slug)
         .bind(content)
@@ -40,6 +42,7 @@ impl Post {
                 .map(ToString::to_string)
                 .unwrap_or_else(|| "unknown".to_owned()),
         )
+        .bind(highlight)
         .execute(pool)
         .await?;
         Ok(slug)

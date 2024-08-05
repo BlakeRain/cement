@@ -7,22 +7,22 @@ fn main() {
         build_date.pop();
     }
 
-    // Run `npm install` to install Tailwind CSS
-    let status = Command::new("npm")
-        .args(["install"])
-        .status()
-        .expect("failed to install node dependencies");
-    if !status.success() {
-        panic!("failed to install node dependencies");
-    }
+    let npm_commands = vec![
+        vec!["install"],
+        vec!["run", "build-tailwind"],
+        vec!["run", "build-highlight"],
+        vec!["run", "copy-highlight"],
+    ];
 
-    // Run `npm run build` to build the Tailwind CSS
-    let status = Command::new("npm")
-        .args(["run", "build"])
-        .status()
-        .expect("failed to build Tailwind CSS");
-    if !status.success() {
-        panic!("failed to build Tailwind CSS");
+    for npm_command in &npm_commands {
+        let status = Command::new("npm")
+            .args(npm_command)
+            .status()
+            .unwrap_or_else(|_| panic!("failed to run npm command: {:?}", npm_command));
+
+        if !status.success() {
+            panic!("failed to run npm command: {:?}", npm_command);
+        }
     }
 
     println!("cargo:rerun-if-changed=templates");

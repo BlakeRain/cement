@@ -1,4 +1,5 @@
 use poem::{
+    endpoint::StaticFilesEndpoint,
     error::InternalServerError,
     get, handler,
     http::{header::LOCATION, HeaderMap, HeaderValue, StatusCode},
@@ -40,6 +41,7 @@ fn handle_index_get(token: &CsrfToken) -> poem::Result<Html<String>> {
 #[derive(Deserialize)]
 struct CreatePaste {
     token: String,
+    highlight: String,
     content: String,
 }
 
@@ -48,7 +50,11 @@ async fn handle_index_post(
     env: Data<&Env>,
     verifier: &CsrfVerifier,
     remote: RealIp,
-    Form(CreatePaste { token, content }): Form<CreatePaste>,
+    Form(CreatePaste {
+        token,
+        highlight,
+        content,
+    }): Form<CreatePaste>,
 ) -> poem::Result<(StatusCode, HeaderMap, ())> {
     if !verifier.is_valid(&token) {
         tracing::error!("CSRF token was invalid");
@@ -60,7 +66,13 @@ async fn handle_index_post(
         ));
     }
 
-    let slug = Post::create(&env.pool, &remote, content)
+    let highlight = if highlight.is_empty() {
+        None
+    } else {
+        Some(highlight)
+    };
+
+    let slug = Post::create(&env.pool, &remote, content, highlight)
         .await
         .map_err(InternalServerError)?;
 
@@ -89,6 +101,7 @@ pub fn create_app(env: Env) -> impl IntoEndpoint {
     Route::new()
         .at("/", get(handle_index_get).post(handle_index_post))
         .at("/:code", get(handle_paste_get))
+        .nest("/static", StaticFilesEndpoint::new("static"))
         .data(env)
         .with(Csrf::new())
 }

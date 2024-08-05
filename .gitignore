@@ -4,5 +4,7 @@
 /package-lock.json
 /target
 /templates/main.css
+/templates/highlight.css
+/static/highlightjs/
 /yarn.lock
 .DS_Store

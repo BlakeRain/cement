@@ -1,11 +1,47 @@
 {% extends "base.html" %}
 {% block title %}View Paste{% endblock title %}
+{% block head %}
+  {% if post and post.highlight is string %}
+      <style>{% include "highlight.css" %}</style>
+  {% endif %}
+{% endblock head %}
 {% block body %}
   {% if post %}
-    <pre class="grow font-mono">{{ post.content }}</pre>
+    {% if post.highlight is string %}
+      <pre class="w-full h-full overflow-scroll font-mono"><code class="language-{{ post.highlight }}">{{ post.content }}</code></pre>
+    {% else %}
+      <pre class="grow font-mono">{{ post.content }}</pre>
+    {% endif %}
     <div class="flex flex-row justify-center select-none">
       <a class="text-blue-500 hover:underline" href="/">Create a new paste</a>
     </div>
+    {% if post.highlight is string %}
+      <script src="/static/highlightjs/highlight.min.js"></script>
+      {% set common = ["bash", "c", "cpp", "csharp", "css", "diff", "go","grapql", "init", "java",
+      "javascript", "json", "kotlin", "less", "lua", "makefile", "markdown", "objectivec", "perl",
+      "php-template", "php", "plaintext", "python-repl", "python", "r", "ruby", "rust", "scss",
+      "shell", "sql", "swift", "typescript", "vbnet", "wasm", "xml", "yaml"] %}
+      {% if common is not containing(post.highlight) %}
+        <script src="/static/highlightjs/languages/{{ post.highlight }}.min.js"></script>
+      {% endif %}
+      <script>
+        hljs.highlightAll();
+      </script>
+    {% endif %}
+    <button
+      id="copy-button"
+      class="fixed bottom-4 right-4 px-4 py-2 rounded-lg shadow-lg bg-blue-800 dark:bg-blue-800
+      hover:bg-blue-700 dark:hover:bg-blue-700 text-gray-200 hover:text-gray-100 text-lg
+      cursor-pointer opacity-75 hover:opacity-100 transition-colors"
+      type="button"
+      title="Copy to clipboard">Copy</button>
+    <script>
+      (function() {
+        document.getElementById("copy-button").addEventListener("click", () => {
+          navigator.clipboard.writeText(document.querySelector("pre").textContent);
+        })
+      })();
+    </script>
   {% else %}
     <div class="grow flex flex-col justify-center items-center gap-2">
       <h1 class="text-4xl font-bold">&#x1FAE0; Not Found</h1>
@@ -14,4 +50,3 @@
     </div>
   {% endif %}
 {% endblock body %}
-
