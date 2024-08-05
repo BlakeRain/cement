@@ -12,8 +12,8 @@
     "tailwindcss": "^3.4.3"
   },
   "scripts": {
-    "build-tailwind": "tailwindcss --postcss -i style/input.css -o templates/main.css -m",
-    "build-highlight": "postcss style/highlight.css -o templates/highlight.css",
+    "build-tailwind": "tailwindcss --postcss -i style/input.css -o static/main.css -m",
+    "build-highlight": "postcss style/highlight.css -o static/highlight.css",
     "copy-highlight": "mkdir -p ./static/highlightjs && cp -r node_modules/@highlightjs/cdn-assets/highlight.min.js node_modules/@highlightjs/cdn-assets/languages ./static/highlightjs/"
   }
 }

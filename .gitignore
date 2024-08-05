@@ -6,5 +6,7 @@
 /templates/main.css
 /templates/highlight.css
 /static/highlightjs/
+/static/main.css
+/static/highlight.css
 /yarn.lock
 .DS_Store

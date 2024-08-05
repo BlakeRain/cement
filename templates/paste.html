@@ -2,7 +2,7 @@
 {% block title %}View Paste{% endblock title %}
 {% block head %}
   {% if post and post.highlight is string %}
-      <style>{% include "highlight.css" %}</style>
+      <link rel="stylesheet" href="/static/highlight.css">
   {% endif %}
 {% endblock head %}
 {% block body %}

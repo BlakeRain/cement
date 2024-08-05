@@ -4,10 +4,7 @@
     {% block head %}
     <title>{% block title %}{% endblock title %} - Cement</title>
     {% endblock head %}
-    <style>
-      {% include "main.css" %}
-      {% block style %}{% endblock style %}
-    </style>
+    <link rel="stylesheet" href="/static/main.css">
     <script defer data-domain="paste.blakerain.com" src="https://pa.blakerain.com/js/script.js"></script>
   </head>
   <body class="bg-neutral-200 text-neutral-800 dark:bg-slate-900 dark:text-neutral-300 flex flex-col gap-4 h-screen p-4">
