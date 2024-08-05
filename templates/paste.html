@@ -7,15 +7,10 @@
 {% endblock head %}
 {% block body %}
   {% if post %}
-    {% if post.highlight is string %}
-      <pre class="w-full h-full overflow-scroll font-mono"><code class="language-{{ post.highlight }}">{{ post.content }}</code></pre>
-    {% else %}
+    {% if post.highlight is not string %}
       <pre class="grow font-mono">{{ post.content }}</pre>
-    {% endif %}
-    <div class="flex flex-row justify-center select-none">
-      <a class="text-blue-500 hover:underline" href="/">Create a new paste</a>
-    </div>
-    {% if post.highlight is string %}
+    {% else %}
+      <pre class="w-full h-full overflow-scroll font-mono"><code class="language-{{ post.highlight }}">{{ post.content }}</code></pre>
       <script src="/static/highlightjs/highlight.min.js"></script>
       {% set common = ["bash", "c", "cpp", "csharp", "css", "diff", "go","grapql", "init", "java",
       "javascript", "json", "kotlin", "less", "lua", "makefile", "markdown", "objectivec", "perl",
@@ -28,13 +23,22 @@
         hljs.highlightAll();
       </script>
     {% endif %}
-    <button
-      id="copy-button"
-      class="fixed bottom-4 right-4 px-4 py-2 rounded-lg shadow-lg bg-blue-800 dark:bg-blue-800
-      hover:bg-blue-700 dark:hover:bg-blue-700 text-gray-200 hover:text-gray-100 text-lg
-      cursor-pointer opacity-75 hover:opacity-100 transition-colors"
-      type="button"
-      title="Copy to clipboard">Copy</button>
+    <div class="fixed bottom-4 right-4 flex flex-row gap-2">
+      <a
+        href="/"
+        class="px-5 py-2.5 font-medium rounded-lg text-sm transition-colors text-gray-900 bg-white
+        border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4
+        focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400
+        dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+        title="Create a new paste">New Paste</a>
+      <button
+        id="copy-button"
+        class="px-5 py-2.5 font-medium rounded-lg text-sm transition-colors text-white bg-blue-700
+        hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700
+        focus:outline-none dark:focus:ring-blue-800"
+        type="button"
+        title="Copy to clipboard">Copy to clipboard</button>
+    </div>
     <script>
       (function() {
         document.getElementById("copy-button").addEventListener("click", () => {

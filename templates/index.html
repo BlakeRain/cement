@@ -14,15 +14,17 @@
       placeholder="Paste something :)"></textarea>
   <div class="absolute bottom-4 right-4 flex flex-row items-stretch gap-2">
     <select
-      class="px-4 py-2 bg-slate-200 dark:bg-slate-800 text-gray-800 dark:text-gray-200 text-md rounded-md"
+      class="block p-2.5 pr-8 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
+      focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600
+      dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       name="highlight">
       <option value="">No syntax highlighting</option>
       {% include "highlight/languages.html" %}
     </select>
     <button
-        class="px-4 py-2 rounded-md bg-blue-800 dark:bg-blue-800 hover:bg-blue-700
-        dark:hover:bg-blue-700 text-gray-200 hover:text-gray-100 text-md cursor-pointer
-        transition-colors"
+        class="px-5 py-2.5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4
+        focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none
+        dark:focus:ring_blue-800 font-medium rounded-lg text-sm transition-colors"
         type="submit"
         title="Create paste &#x2318;+&#x23ce;">&#10003; Create paste</button>
   </div>
@@ -43,3 +45,5 @@
   });
 </script>
 {% endblock body %}
+
+
