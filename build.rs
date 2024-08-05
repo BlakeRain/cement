@@ -4,6 +4,15 @@ fn main() {
     let git_commit = build_data::get_git_commit_short().unwrap_or_else(|_| "unknown".to_string());
     let build_date = build_data::format_date(build_data::now());
 
+    // Run `npm install` to install Tailwind CSS
+    let status = Command::new("npm")
+        .args(["install"])
+        .status()
+        .expect("failed to install node dependencies");
+    if !status.success() {
+        panic!("failed to install node dependencies");
+    }
+
     // Run `npm run build` to build the Tailwind CSS
     let status = Command::new("npm")
         .args(["run", "build"])
