@@ -19,5 +19,6 @@ FROM scratch
 EXPOSE 3000
 COPY --from=builder /usr/src/cement/target/x86_64-unknown-linux-musl/release/cement .
 COPY --from=builder /usr/src/cement/templates ./templates
+COPY --from=builder /usr/src/cement/static ./static
 ENTRYPOINT ["./cement"]
 
