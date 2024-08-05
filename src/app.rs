@@ -16,7 +16,6 @@ fn default_context() -> Context {
 
     context.insert("version", env!("CARGO_PKG_VERSION"));
     context.insert("build_date", env!("CARGO_BUILD_DATE"));
-    context.insert("git_commit", env!("CARGO_GIT_COMMIT"));
 
     context
 }
