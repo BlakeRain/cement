@@ -21,4 +21,3 @@ COPY --from=builder /usr/src/cement/target/x86_64-unknown-linux-musl/release/cem
 COPY --from=builder /usr/src/cement/templates ./templates
 COPY --from=builder /usr/src/cement/static ./static
 ENTRYPOINT ["./cement"]
-

@@ -1,10 +1,10 @@
 use lazy_static::lazy_static;
-use tera::Tera;
+use minijinja::{Environment, path_loader};
 
 lazy_static! {
-    pub static ref TEMPLATES: Tera = {
-        let mut tera = Tera::new("templates/**/*").expect("to load templates");
-        tera.autoescape_on(vec![".html"]);
-        tera
+    pub static ref TEMPLATES: Environment<'static> = {
+        let mut env = Environment::new();
+        env.set_loader(path_loader("templates"));
+        env
     };
 }

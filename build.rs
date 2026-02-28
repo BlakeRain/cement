@@ -1,7 +1,7 @@
 use std::process::Command;
 
 fn main() {
-    let mut build_date = build_data::format_date(build_data::now());
+    let mut build_date = build_data::format_date(build_data::now()).expect("to get build date");
 
     if build_date.ends_with('Z') {
         build_date.pop();
@@ -28,5 +28,5 @@ fn main() {
     println!("cargo:rerun-if-changed=templates");
     println!("cargo:rustc-env=CARGO_BUILD_DATE={}", build_date);
 
-    build_data::no_debug_rebuilds();
+    build_data::no_debug_rebuilds().expect("to disable debug rebuilds");
 }

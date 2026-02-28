@@ -16,7 +16,7 @@
       "javascript", "json", "kotlin", "less", "lua", "makefile", "markdown", "objectivec", "perl",
       "php-template", "php", "plaintext", "python-repl", "python", "r", "ruby", "rust", "scss",
       "shell", "sql", "swift", "typescript", "vbnet", "wasm", "xml", "yaml"] %}
-      {% if common is not containing(post.highlight) %}
+      {% if common is not in post.highlight %}
         <script src="/static/highlightjs/languages/{{ post.highlight }}.min.js"></script>
       {% endif %}
       <script>

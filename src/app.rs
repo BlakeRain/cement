@@ -1,41 +1,43 @@
+use anyhow::Context;
 use poem::{
+    EndpointExt, IntoEndpoint, Route,
     endpoint::StaticFilesEndpoint,
     error::InternalServerError,
     get, handler,
-    http::{header::LOCATION, HeaderMap, HeaderValue, StatusCode},
+    http::{HeaderMap, HeaderValue, StatusCode, header::LOCATION},
     middleware::Csrf,
     web::{CsrfToken, CsrfVerifier, Data, Form, Html, Path, RealIp},
-    EndpointExt, IntoEndpoint, Route,
 };
-use serde::Deserialize;
-use tera::Context;
+use serde::{Deserialize, Serialize};
 
 use crate::{env::Env, model::Post, templates::TEMPLATES};
 
-fn default_context() -> Context {
-    let mut context = Context::new();
-
-    context.insert("version", env!("CARGO_PKG_VERSION"));
-    context.insert("build_date", env!("CARGO_BUILD_DATE"));
-
-    context
+fn default_context() -> minijinja::Value {
+    minijinja::context! {
+        version => env!("CARGO_PKG_VERSION"),
+        build_date => env!("CARGO_BUILD_DATE"),
+    }
 }
 
-fn render_template(name: &str, context: &Context) -> poem::Result<Html<String>> {
-    TEMPLATES
-        .render(name, context)
-        .map_err(|err| {
-            tracing::error!("render '{name}' failed: {err:?}");
-            InternalServerError(err)
-        })
-        .map(Html)
+fn render_template<S: Serialize>(name: &str, context: S) -> poem::Result<Html<String>> {
+    let template = TEMPLATES
+        .get_template(name)
+        .context("failed to get template")?;
+    let value = template
+        .render(context)
+        .context("failed to render template")?;
+    Ok(Html(value))
 }
 
 #[handler]
 fn handle_index_get(token: &CsrfToken) -> poem::Result<Html<String>> {
-    let mut context = default_context();
-    context.insert("token", &token.0);
-    render_template("index.html", &context)
+    render_template(
+        "index.html",
+        minijinja::context! {
+            token => token.0,
+            ..default_context()
+        },
+    )
 }
 
 #[derive(Deserialize)]
@@ -72,9 +74,9 @@ async fn handle_index_post(
         Some(highlight)
     };
 
-    let slug = Post::create(&env.pool, &remote, content, highlight)
+    let slug = Post::create(&env.db, &remote, content, highlight)
         .await
-        .map_err(InternalServerError)?;
+        .context("failed to create post")?;
 
     Ok((
         StatusCode::FOUND,
@@ -88,13 +90,17 @@ async fn handle_index_post(
 
 #[handler]
 async fn handle_paste_get(env: Data<&Env>, Path(code): Path<String>) -> poem::Result<Html<String>> {
-    let post = Post::get(&env.pool, &code)
+    let post = Post::get(&env.db, &code)
         .await
-        .map_err(InternalServerError)?;
+        .context("failed to get post")?;
 
-    let mut context = default_context();
-    context.insert("post", &post);
-    render_template("paste.html", &context)
+    render_template(
+        "paste.html",
+        minijinja::context! {
+            post,
+            ..default_context()
+        },
+    )
 }
 
 pub fn create_app(env: Env) -> impl IntoEndpoint {

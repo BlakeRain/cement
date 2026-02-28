@@ -2,7 +2,7 @@ use app::create_app;
 use args::Args;
 use clap::Parser;
 use env::Env;
-use poem::{listener::TcpListener, Server};
+use poem::{Server, listener::TcpListener};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 mod app;
@@ -29,9 +29,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         sub.init();
     }
 
-    let env = Env::new(&args.db).await?;
+    let env = Env::new(args.db_remote, args.db_token).await?;
     let app = create_app(env);
-    Server::new(TcpListener::bind("0.0.0.0:3000"))
+    Server::new(TcpListener::bind("0.0.0.0:4000"))
         .run(app)
         .await?;
 

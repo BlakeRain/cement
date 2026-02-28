@@ -3,7 +3,8 @@ CREATE TABLE IF NOT EXISTS posts (
   slug TEXT NOT NULL,
   content TEXT NOT NULL,
   added TIMESTAMP NOT NULL,
-  remote TEXT NOT NULL
+  remote TEXT NOT NULL,
+  highlight TEXT
 );
 
 CREATE INDEX IF NOT EXISTS posts_slugs_ix ON posts (slug);
