@@ -1,6 +1,7 @@
 use std::sync::Arc;
 
 use anyhow::Context;
+use hyper_rustls::HttpsConnectorBuilder;
 use libsql::{Builder, Database};
 
 use crate::model::migrate;
@@ -30,7 +31,14 @@ pub struct Inner {
 
 impl Env {
     pub async fn new(libsql_url: String, libsql_token: String) -> anyhow::Result<Self> {
+        let https = HttpsConnectorBuilder::new()
+            .with_webpki_roots()
+            .https_or_http()
+            .enable_http1()
+            .build();
+
         let db = Builder::new_remote(libsql_url, libsql_token)
+            .connector(https)
             .build()
             .await
             .context("failed to connect to libSQL database")?;

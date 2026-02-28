@@ -8,6 +8,7 @@ anyhow = { version = "1.0" }
 clap = { version = "4.4", features = ["derive", "env"] }
 futures-util = { version = "0.3" }
 gpw = { version = "0.1" }
+hyper-rustls = { version = "0.25", features = ["webpki-roots"] }
 lazy_static = { version = "1.4" }
 libsql = { version = "0.9", features = ["remote", "serde"] }
 minijinja = { version = "2.16", features = ["loader"] }

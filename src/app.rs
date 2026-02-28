@@ -2,7 +2,6 @@ use anyhow::Context;
 use poem::{
     EndpointExt, IntoEndpoint, Route,
     endpoint::StaticFilesEndpoint,
-    error::InternalServerError,
     get, handler,
     http::{HeaderMap, HeaderValue, StatusCode, header::LOCATION},
     middleware::Csrf,

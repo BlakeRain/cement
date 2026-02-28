@@ -2,10 +2,10 @@ use std::cell::RefCell;
 
 use anyhow::Context;
 use gpw::PasswordGenerator;
-use libsql::{Database, de::from_row};
+use libsql::Database;
 use poem::web::RealIp;
 use rand::{RngExt, distr::Alphanumeric, rng};
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 use time::{OffsetDateTime, format_description::well_known::Rfc3339};
 
 pub async fn migrate(db: &Database) -> anyhow::Result<()> {
