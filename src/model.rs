@@ -78,8 +78,6 @@ impl Post {
             return Ok(None);
         };
 
-        eprintln!("{:?}", row);
-
         Ok(Some(Post {
             id: row.get(0)?,
             slug: row.get(1)?,
