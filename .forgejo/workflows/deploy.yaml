@@ -23,8 +23,8 @@ jobs:
           Components: stable
           Signed-By: /etc/apt/keyrings/docker.asc
           EOF
-          apt update
-          apt install docker-ce-cli docker-buildx-plugin
+          apt-get update
+          apt-get install -y docker-ce-cli docker-buildx-plugin
       - name: Build the Docker Image
         run: |
           docker build -t blakerain/cement .
