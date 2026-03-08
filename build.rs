@@ -9,7 +9,7 @@ fn main() {
 
     let npm_commands = vec![
         vec!["install"],
-        vec!["run", "build-tailwind"],
+        vec!["run", "build-css"],
         vec!["run", "build-highlight"],
         vec!["run", "copy-highlight"],
     ];
@@ -26,6 +26,7 @@ fn main() {
     }
 
     println!("cargo:rerun-if-changed=templates");
+    println!("cargo:rerun-if-changed=style");
     println!("cargo:rustc-env=CARGO_BUILD_DATE={}", build_date);
 
     build_data::no_debug_rebuilds().expect("to disable debug rebuilds");

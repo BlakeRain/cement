@@ -1,6 +1,7 @@
 [package]
 name = "cement"
 version = "2.1.0"
+rust-version = "1.90"
 edition = "2024"
 
 [dependencies]

@@ -1,49 +1,37 @@
-{% extends "base.html" %}
-{% block title %}View Paste{% endblock title %}
-{% block head %}
-  {% if post and post.highlight is string %}
+{%- extends "base.html" %}
+{%- block title %}View Paste{% endblock title %}
+{%- block head %}
+  {%- if post and post.highlight is string %}
       <link rel="stylesheet" href="/static/highlight.css">
-  {% endif %}
-{% endblock head %}
-{% block body %}
-  {% if post %}
-    {% if post.highlight is not string %}
-      <pre class="grow font-mono">{{ post.content }}</pre>
-    {% else %}
-      <pre class="w-full h-full overflow-scroll font-mono"><code class="language-{{ post.highlight }}">{{ post.content }}</code></pre>
+  {%- endif %}
+{%- endblock %}
+{%- block body %}
+  {%- if post %}
+    {%- if post.highlight is not string %}
+      <pre class="plain">{{ post.content }}</pre>
+    {%- else %}
+      <pre class="highlight"><code class="language-{{ post.highlight }}">{{ post.content }}</code></pre>
       <script src="/static/highlightjs/highlight.min.js"></script>
-      {% set common = ["bash", "c", "cpp", "csharp", "css", "diff", "go","grapql", "init", "java",
+      {%- set common = ["bash", "c", "cpp", "csharp", "css", "diff", "go","grapql", "init", "java",
       "javascript", "json", "kotlin", "less", "lua", "makefile", "markdown", "objectivec", "perl",
       "php-template", "php", "plaintext", "python-repl", "python", "r", "ruby", "rust", "scss",
       "shell", "sql", "swift", "typescript", "vbnet", "wasm", "xml", "yaml"] %}
-      {% if common is not in post.highlight %}
+      {%- if common is not in post.highlight %}
         <script src="/static/highlightjs/languages/{{ post.highlight }}.min.js"></script>
-      {% endif %}
+      {%- endif %}
       <script>
         hljs.highlightAll();
       </script>
-    {% endif %}
-    <div class="fixed bottom-4 right-4 flex flex-row gap-2">
-      <a
-        href="/"
-        class="px-5 py-2.5 font-medium rounded-lg text-sm transition-colors text-gray-900 bg-white
-        border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4
-        focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400
-        dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 flex flex-row gap-1"
-        title="Create a new paste">
-        {% include "icons/clipboard-copy.svg" %}
+    {%- endif %}
+    <div class="toolbar">
+      <a href="/" class="button" title="Create a new paste">
+        {% include "icons/file-plus-2.svg" %}
         New Paste
       </a>
-      <button
-        id="copy-button"
-        class="px-5 py-2.5 font-medium rounded-lg text-sm transition-colors text-white bg-blue-700
-        hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700
-        focus:outline-none dark:focus:ring-blue-800 flex flex-row gap-1"
-        type="button"
-        title="Copy to clipboard">
+      <button id="copy-button" type="button" title="Copy to clipboard">
         {% include "icons/clipboard-copy.svg" %}
         Copy to clipboard
-        </button>
+      </button>
     </div>
     <script>
       (function() {
@@ -52,11 +40,11 @@
         })
       })();
     </script>
-  {% else %}
-    <div class="grow flex flex-col justify-center items-center gap-2">
-      <h1 class="text-4xl font-bold">&#x1FAE0; Not Found</h1>
+  {%- else %}
+    <div class="missing">
+      <h1>&#x1FAE0; Not Found</h1>
       <p class="opacity-75">Sorry, but the paste you were trying to view does not exist.</p>
-      <a class="text-blue-500 hover:underline" href="/">Create a new paste</a>
+      <a class="button" href="/">Create a new paste</a>
     </div>
-  {% endif %}
-{% endblock body %}
+  {%- endif %}
+{%- endblock %}
