@@ -40,4 +40,6 @@ jobs:
           RELEASE_VERSION="${GITHUB_REF#refs/*/}"
           docker tag blakerain/cement:latest blakerain/cement:$RELEASE_VERSION
           docker push blakerain/cement:$RELEASE_VERSION
-          docker push git.blakerain.com/blakerain/cement:$RELEASE_VERSION
+          docker tag blakerain/cement:latest git.blakerain.com/blakerain/cement:latest
+          docker tag blakerain/cement:latest git.blakerain.com/blakerain/cement:$RELEASE_VERSION
+          docker push git.blakerain.com/blakerain/cement:latest
