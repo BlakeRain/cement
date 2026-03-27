@@ -1,5 +1,8 @@
 # cement - a super light-weight pastebin
 
+> **ARCHIVED**
+> This repository has moved to: https://git.blakerain.com/BlakeRain/cement
+
 <picture>
  <source media="(prefers-color-scheme: dark)" srcset="media/masked-screenshot.png">
  <source media="(prefers-color-scheme: light)" srcset="media/masked-screenshot.png">
